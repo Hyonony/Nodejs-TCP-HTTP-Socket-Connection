@@ -1,16 +1,28 @@
-# Nodejs-TCP-HTTP-Socket-Connection
+## Nodejs-TCP-HTTP-Socket-Connection BroadCast
 
-# npm install (module)
+### npm install (modules)
+
   -> net, dotenv, express, http, socket.io, nodemon ...
-# nodemon or node Server.js
+
+### START 
+Go Terminal write( nodemon Server.js ) or ( node Server.js )
 
 
 
-# localhost:3000 -> Http Server
-# localhost:1337 -> TCP Server
 
 
 
-# structure
+
+### Structure
 
   App <--(socket.io)--> SERVER <---(Net module)---> Client
+  
+ 
+  
+  localhost:3000 -> Http Server
+  
+  
+ 
+  localhost:1337 -> TCP Server
+  
+
