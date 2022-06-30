@@ -25,4 +25,10 @@ Go Terminal write( nodemon Server.js ) or ( node Server.js )
  
   localhost:1337 -> TCP Server
   
+### Documentation
+Socket io
+= https://socket.io/get-started/chat
+
+Net
+= https://nodejs.org/api/net.html
 
