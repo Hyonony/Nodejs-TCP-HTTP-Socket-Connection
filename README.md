@@ -1,8 +1,8 @@
 ## Nodejs-TCP-HTTP-Socket-Connection BroadCast
 
-### npm install (modules)
+### INSTALL
 
-  -> net, dotenv, express, http, socket.io, nodemon ...
+write => ( npm install )
 
 ### START 
 Go Terminal write( nodemon Server.js ) or ( node Server.js )
