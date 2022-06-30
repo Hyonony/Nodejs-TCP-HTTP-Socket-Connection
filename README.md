@@ -2,7 +2,7 @@
 
 ### INSTALL
 
-write => ( npm install )
+write => ( npm install ) or ( git clone https://github.com/Hyonony/Nodejs-TCP-HTTP-Socket-Connection.git )
 
 ### START 
 Go Terminal write( nodemon Server.js ) or ( node Server.js )
