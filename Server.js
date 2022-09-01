@@ -1,2 +1,0 @@
-require('./httpServer');
-require('./tcpServer');
