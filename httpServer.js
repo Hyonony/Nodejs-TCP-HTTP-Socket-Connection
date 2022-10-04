@@ -1,4 +1,5 @@
 
+const { fstat } = require('fs')
 const net = require('net')
 const serveStatic = require('serve-static')
       express = require('express') // 웹 프레임 워크
@@ -12,6 +13,12 @@ const serveStatic = require('serve-static')
       tcp_port = process.env.tcp_port  // .env
       client = net.connect({port :tcp_port, host : 'localhost' })
       //TCP <-> Http 연결에 필요한 객체
+      mysql = require('mysql')
+      fs = require('fs');
+
+
+
+
 
 // httpserver를 Linsten 상태로 둠
 httpserver.listen(http_PORT, ()=> {
@@ -22,9 +29,14 @@ httpserver.listen(http_PORT, ()=> {
 // 가상의 페이지로 테스트 용으로 사용하는 것.
 
 app.use(bodyParser.urlencoded({extended:false}))
+app.use(express.static(__dirname + '/html'))
 
 app.use(bodyParser.json())
 app.use('/public', serveStatic(path.join(__dirname, 'view')))
+
+app.use((req, res) => {
+  res.status(404).send('Not Found')
+})
 
 //socket.io 연결됐을 경우 아래 내용이 실행됨
 io.on('connection', (socket)=> {
