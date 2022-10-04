@@ -7,6 +7,8 @@ write => ( npm install ) or ( git clone https://github.com/Hyonony/Nodejs-TCP-HT
 ### START 
 Go Terminal write( nodemon Server.js ) or ( node Server.js )
 
+Go to http://localhost:3000/public/mainPage.html
+
 
 
 
