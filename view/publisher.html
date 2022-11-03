@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
 <script src="https://static.robotwebtools.org/roslibjs/current/roslib.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
 <script>
   // Connecting to ROS
@@ -39,23 +40,23 @@
   ros.connect('ws://localhost:1337');
 
   // Publish a Topic
-  var example = new ROSLIB.Topic({
+  var rosTopic = new ROSLIB.Topic({
     ros : ros,
-    name : '/example_topic',
+    name : '/goal_pos', //topic 이름 
     messageType : 'std_msgs/String'
   });
 
   var count = 0;
   setInterval(() => {
     var message = 'hello from ros2bridge ' + count++;
-    example.publish({data: message});
+    rosTopic.publish({data: message});
     document.getElementById("publisher").innerText = message;
   }, 1000);
 </script>
 </head>
 
 <body>
-  <h1>Simple Publisher Example</h1>
+  <h1>Publisher Page</h1>
   <p>This example will pubilish a topic named "example_topic".</p>
   <div id="statusIndicator">
     <p id="connecting">
@@ -76,12 +77,9 @@
       <b>Publish message: </b>
       <span id="publisher"></span>
     </p>
-    <p>
-      <div><a href=./socket.html>TCP <-> IP 소켓 테스트하러 이동하기</a></div>
-      <div><a href=./client.html>Ros client 확인하러 이동하기</a></div>
-      <div><a href=./service.html>Ros Service 확인하러 이동하기</a></div>
-      <div><a href=./subscription.html>Ros subscription 확인하러 이동하기</a></div>
-    </p>
+
+    <p><a class="btn btn-primary btn-lg" href="./index.html" role="button">Let's go Home &raquo;</a></p>
+
   </div>
 </body>
 </html>
