@@ -16,7 +16,7 @@ net.createServer(function (socket) {
     
     // Send a nice welcome message and announce
     // socket.write("Welcome " + socket.name + "\n");
-    console.log("\n" + socket.name + " joined\n")
+    console.log("\nTCP Connection :" + socket.name + " joined\n")
     
     //TcpBroadCast(socket.name + " joined\n")
   
@@ -28,18 +28,19 @@ net.createServer(function (socket) {
       // socket.write()
       TcpBroadCast(data, socket)
       // TcpBroadCast(Data, socket);
+      console.log("\nName " + socket.name + "[ Data : "+ data + "]");
   
       
     });
     
     // 클라이언트가 떠났을 경우 처리
-    socket.on('close', ()=>{
-      console.log('client disconnected')
-    })
+    // socket.on('close', ()=>{
+    //   console.log('client disconnected')
+    // })
     socket.on('end', function () {
       // 떠난 클라이언트를 삭제
       clients.splice(clients.indexOf(socket), 1)
-      console.log("\n" + socket.name + " left\n")
+      console.log("\nTCP Disconnection :" + socket.name + " left\n")
     });
     
     // 클라이언트들에게 데이터를 BroadCast 
@@ -48,9 +49,10 @@ net.createServer(function (socket) {
         // Don't want to send it to sender
         if (client === sender) return;
         client.write(message);
+
       });
       // 서버 내에서 출력하여 확인
-      process.stdout.write(message)
+      // process.stdout.write(message)
     }
     //console.log(clients.length)
   
