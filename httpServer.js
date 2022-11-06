@@ -12,10 +12,12 @@ const net = require('net'),
 const client = net.connect({port: tcpPort, host:'localhost'})
 const cors = require('cors')
 
+
 const options = {
   origin: 'http://localhost:3000',
   Credential: true,
 };
+
 
 var count = 0;
 
@@ -29,7 +31,7 @@ app.use(cors(options))
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.static(__dirname + '/html'))
 
-app.use(bodyParser.json())
+app.use(bodyParser.json())``
 app.use('/', serveStatic(path.join(__dirname, 'view')))
 
 app.use((req, res) => {
@@ -50,12 +52,16 @@ io.on('connection', (socket)=> {
   
   socket.on('message', (message)=>{
     // message라는 약속으로 통신을 하는 것 프론트와 같은 네임을 가져야함
-    
-    client.write(`"${message}"`)
+    // client.write(`"${message}"`)
+    // client.write(JSON.stringify(message))
     //TCP <-> Http 연결에 필요한 객체를 사용하여 TcpBroadCast 함수로 데이터 전송
-    io.emit('message', `${count}번 익명자 : ${message}`);
-  })
+    // io.emit('message', `${count}번 익명자 : ${message}`);
+    io.emit('message', JSON.stringify(message))
+  }) // tcp -> http
 
+  socket.on('message2', (message2)=>{
+    client.write(`"${message2}"`)
+  })// http -> tcp
   socket.on('disconnect', () => {
     console.log('Http User Disconnected');
     count--;
