@@ -1,79 +1,63 @@
-const net = require('net')
-require('dotenv').config()
-const tcpPort = process.env.TCP_PORT
-const clients = [];
-require('./httpServer');
-const io = require("socket.io-client")
-// const client = net.connect({port: tcpPort, host:'localhost'})
+const express = require('express')
+const app = express()
+const httpserver = require('http').createServer(app)
+const io = require('socket.io')(httpserver)
+const bodyParser = require('body-parser')
+const serveStatic = require('serve-static')
+const path = require('path')
+require("dotenv").config();
+const net = require('net'),
+      tcpPort = process.env.tcp_port,
+      httpPort = process.env.http_port
+const client = net.connect({port: tcpPort, host:'localhost'})
+const cors = require('cors')
 
-const socketClient = io("http://localhost:3000")
+const options = {
+  origin: 'http://localhost:3000',
+  Credential: true,
+};
+
+var count = 0;
+
+
+httpserver.listen(httpPort, ()=> {
+  console.log(`HTTP Server is listening on port ${httpPort}`)
+});
+
+
+app.use(cors(options))
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(express.static(__dirname + '/html'))
+
+app.use(bodyParser.json())
+app.use('/', serveStatic(path.join(__dirname, 'view')))
+
+app.use((req, res) => {
+  res.status(404).send('Not Found')
+})
 
 
 
-net.createServer(function (socket) {
-    socket.setEncoding('utf-8')
-    //utf8로 인코딩, '' 사이에 다른 변수로 넣을 수 있음.
-    
-    // clients의 ID 값 [ex)::ffff:127.0.0.1:50573]
-    socket.name = socket.remoteAddress + ":" + socket.remotePort 
+io.on('connection', (socket)=> {
+  //연결되면 socket 파라미터에 socket 데이터가 쌓임
   
-    // 새로운 client를 list에 저장
-    clients.push(socket)
-    
-    // Send a nice welcome message and announce
-    // socket.write("Welcome " + socket.name + "\n");
-    console.log("\nTCP Connection :" + socket.name + " joined\n")
-    
-    //TcpBroadCast(socket.name + " joined\n")
+  count++
+  // const ip = socket.handshake.headers['x-forwarded-for'] || socket.conn.remoteAddress.split(":")[3];
+  // console.log(ip);
+  console.log('Http connection :', socket.request.connection._peername);
+  // console.log(socket);
+  // 확인하려면 위에 터미널에 찍어볼 수 있음
   
-  
-    // 클라이언트에 들어오는 메시지를 처리
-    // write는 데이터를 보낼 떄 사용
+  socket.on('message', (message)=>{
+    // message라는 약속으로 통신을 하는 것 프론트와 같은 네임을 가져야함
     
-    // socketClient.emit('message', ClientData);
-    socket.on('data', function (Data) {
-      // console.log(data)
-      // socket.write()
-      // socketClient.emit('message', JSON.stringify(Data))
-      
-      // clients.emit(`'message', ${message}`);
-      // socketClient.emit('message', {data: data});
-      
-      TcpBroadCast(Data, socket)
-      // TcpBroadCast(Data, socket);
-      console.log("\nName " + socket.name + "[ Data : "+ Data + "]");
-      
-      socketClient.emit('message', Data);
-      //http -> http
+    client.write(`"${message}"`)
+    //TCP <-> Http 연결에 필요한 객체를 사용하여 TcpBroadCast 함수로 데이터 전송
+    io.emit('message', `${count}번 익명자 : ${message}`);
+  })
 
-
-    });
-
-    
-    // 클라이언트가 떠났을 경우 처리
-    // socket.on('close', ()=>{
-    //   console.log('client disconnected')
-    // })
-    socket.on('end', function () {
-      // 떠난 클라이언트를 삭제
-      clients.splice(clients.indexOf(socket), 1)
-      console.log("\nTCP Disconnection :" + socket.name + " left\n")
-    });
-    
-    // 클라이언트들에게 데이터를 BroadCast 
-    function TcpBroadCast(message, sender) {
-      clients.forEach(function (client) {
-        // Don't want to send it to sender
-        if (client === sender) return;
-        client.write(message);
-        
-      });
-      // 서버 내에서 출력하여 확인
-      // process.stdout.write(message)
-      
-    }
-    //console.log(clients.length)
-    
-  }).listen(tcpPort, ()=>{
-    console.log(`TCP Server is listening on port ${tcpPort}`);
-  }); // TCP Server listen 상태
+  socket.on('disconnect', () => {
+    console.log('Http User Disconnected');
+    count--;
+  });
+});
